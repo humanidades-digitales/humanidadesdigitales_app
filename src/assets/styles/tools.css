@@ -1,0 +1,67 @@
+.tools {
+    text-align: center;
+    width: 100%;
+    margin: auto;
+}
+
+.toolsTitle {
+  color: #4f4f4f;
+  text-align: center;
+  font-size: 1rem;
+}
+
+.ocrDiv {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  width: 64%;
+  margin: auto;
+}
+
+.downloadPDFs {
+  margin-top: 1rem;
+}
+
+.searchDiv {
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  text-align: center;
+  padding: 20px;
+  width: 64%;
+  margin: auto;
+  margin-top: 2rem;
+}
+
+.searchBtn {
+  margin-left: 0.5rem!important;
+}
+
+.clipboardBtn {
+  font-size: 0.8rem!important;
+  margin-top: 1.5rem!important;
+}
+
+.searchTitles {
+  color: navy
+}
+
+.resultsDiv p {
+  text-align: left;
+}
+
+.btn {
+    border: none;
+    text-align: center;
+    background-color: rgb(218, 216, 216);
+    height: 50px;
+    border-radius: 12px;
+    color: black;
+    font-weight: bold;
+    transition-duration: 0.6s;
+  }
+
+.btn:hover {
+    background-color: blue;
+    color: aliceblue;
+  }

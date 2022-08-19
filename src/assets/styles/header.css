@@ -1,0 +1,50 @@
+.headerDiv {
+  background-color: white;
+  border-bottom: 4px solid #df0000;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.headerDiv img {
+  display: block;
+  margin: auto;
+  width: 100%;
+  max-width: 250px;
+}
+
+.headerP {
+  text-align: center;
+  color: #3c3c3c;
+}
+
+.headerPBig {
+  text-align: center;
+  font-size: 2rem;
+  color: black;
+  margin-bottom: 0!important;
+}
+
+.inline {
+  display: inline-block;
+  margin: 0
+}
+
+
+/* If the screen size is 601px wide or more, set the font-size of <div> to 80px */
+@media screen and (min-width: 701px) {
+  .headerP {
+    font-size: 1.5rem;
+  }
+}
+
+/* If the screen size is 600px wide or less, set the font-size of <div> to 30px */
+@media screen and (max-width: 700px) {
+  .headerP {
+    font-size: 0.8rem;
+  }
+}
