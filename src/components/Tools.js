@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import '../assets/styles/tools.css';
-import axios from 'axios';
 import { Button, Input } from 'semantic-ui-react';
 import parse from 'html-react-parser';
+import hdapi from '../api/hdapi';
+
+const BASE_URL = 'http://humanidadesdigitales.pe';
 
 const Tools = ({ uniqueId, disabled, corpusSize }) => {
   const [intervalIdState, setIntervalIdState] = useState();
@@ -15,7 +17,7 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
   const [searchResults, setSearchResults] = useState();
 
   React.useEffect(() => {
-    axios.get('http://localhost:3000/ocr/' + uniqueId).then((response) => {
+    hdapi.get('/ocr/' + uniqueId).then((response) => {
       if (response && response.data.isActive === true) {
         setProcessingOCR(true);
         checkOCR();
@@ -27,12 +29,10 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
   }, []);
 
   const callOCR = async () => {
-    await axios
-      .post('http://localhost:3000/ocr/all?uniqueId=' + uniqueId)
-      .then((response) => {
-        setProcessingOCR(true);
-        checkOCR();
-      });
+    await hdapi.post('/ocr/all?uniqueId=' + uniqueId).then((response) => {
+      setProcessingOCR(true);
+      checkOCR();
+    });
   };
 
   const formatResults = (results) => {
@@ -48,10 +48,8 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
 
   const searchPDF = async () => {
     setProcessingSearch(true);
-    await axios
-      .post(
-        `http://localhost:3000/search/all?uniqueId=${uniqueId}&term=${term}`,
-      )
+    await hdapi
+      .post(`/search/all?uniqueId=${uniqueId}&term=${term}`)
       .then((response) => {
         if (response && response.data) {
           setSearchResults(formatResults(response.data));
@@ -63,7 +61,7 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
   const checkOCR = () => {
     const intervalId = setInterval(() => {
       setIntervalIdState(intervalId);
-      axios.get('http://localhost:3000/ocr/' + uniqueId).then((response) => {
+      hdapi.get('/ocr/' + uniqueId).then((response) => {
         setFilesLeft(response.data.filesLeft);
         if (response && response.data.isActive === false) {
           setProcessingOCR(false);
@@ -78,14 +76,12 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
     setCancelingOCR(true);
     clearInterval(intervalIdState);
     setFilesLeft(0);
-    axios
-      .post('http://localhost:3000/ocr/cancelAll?uniqueId=' + uniqueId)
-      .then((response) => {
-        if (response && response.data.isActive === false) {
-          setProcessingOCR(false);
-          setAllProcessed(false);
-        }
-      });
+    hdapi.post('/ocr/cancelAll?uniqueId=' + uniqueId).then((response) => {
+      if (response && response.data.isActive === false) {
+        setProcessingOCR(false);
+        setAllProcessed(false);
+      }
+    });
     setCancelingOCR(false);
   };
 
@@ -109,7 +105,7 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
         </Button>
         {!disabled && allProcessed && !processingOCR ? (
           <div>
-            <a href={`http://localhost:3000/files/download/${uniqueId}`}>
+            <a href={`${BASE_URL}/files/download/${uniqueId}`}>
               <Button primary className="clipboardBtn">
                 DESCARGAR PDFs CONVERTIDOS
               </Button>

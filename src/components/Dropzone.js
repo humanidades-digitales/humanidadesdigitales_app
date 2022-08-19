@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../assets/styles/dropzone.css';
-import axios from 'axios';
+import hdapi from '../api/hdapi';
 
 // Import React FilePond
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -19,21 +19,17 @@ const input = document.querySelector('input[type="file"]');
 
 const Dropzone = ({ uniqueId, onCorpus }) => {
   React.useEffect(() => {
-    axios
-      .get(`http://localhost:3000/files?uniqueId=${uniqueId}`)
-      .then((response) => {
-        setFiles(response.data);
-        onCorpus(response.data.length);
-      });
+    hdapi.get(`/files?uniqueId=${uniqueId}`).then((response) => {
+      setFiles(response.data);
+      onCorpus(response.data.length);
+    });
   }, []);
 
   // Update button based on files in server
   const checkFilesInServer = async () => {
-    await axios
-      .get(`http://localhost:3000/files?uniqueId=${uniqueId}`)
-      .then((response) => {
-        onCorpus(response.data.length);
-      });
+    await hdapi.get(`/files?uniqueId=${uniqueId}`).then((response) => {
+      onCorpus(response.data.length);
+    });
   };
 
   const [files, setFiles] = useState([]);
@@ -67,11 +63,9 @@ const Dropzone = ({ uniqueId, onCorpus }) => {
           },
           remove: async (source, load, error) => {
             // Should somehow send `source` to server so server can remove the file with this source
-            await axios
-              .delete(`http://localhost:3000/files/${uniqueId}/` + source)
-              .then(() => {
-                load();
-              });
+            await hdapi.delete(`/files/${uniqueId}/` + source).then(() => {
+              load();
+            });
 
             // Can call the error method if something is wrong, should exit after
             error('oh my goodness');
