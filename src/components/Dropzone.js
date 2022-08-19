@@ -49,7 +49,7 @@ const Dropzone = ({ uniqueId, onCorpus }) => {
         maxFiles={50}
         acceptedFileTypes={['application/pdf']}
         server={{
-          url: 'http://localhost:3000',
+          url: 'http://humanidadesdigitales.pe:3000',
           process: {
             url: '/files/upload?uniqueId=' + uniqueId,
             method: 'POST',
