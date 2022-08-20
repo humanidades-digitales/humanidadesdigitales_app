@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import '../assets/styles/dropzone.css';
-import hdapi from '../api/hdapi';
+import { hdapi, downloadUrl } from '../api/hdapi';
 
 // Import React FilePond
 import { FilePond, registerPlugin } from 'react-filepond';
@@ -13,9 +13,6 @@ import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
 // Register the plugin with FilePond
 registerPlugin(FilePondPluginFileValidateType);
-
-// Get a file input reference
-const input = document.querySelector('input[type="file"]');
 
 const Dropzone = ({ uniqueId, onCorpus }) => {
   React.useEffect(() => {
@@ -49,7 +46,7 @@ const Dropzone = ({ uniqueId, onCorpus }) => {
         maxFiles={50}
         acceptedFileTypes={['application/pdf']}
         server={{
-          url: 'http://humanidadesdigitales.pe:3000',
+          url: downloadUrl,
           process: {
             url: '/files/upload?uniqueId=' + uniqueId,
             method: 'POST',

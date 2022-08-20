@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import '../assets/styles/tools.css';
 import { Button, Input } from 'semantic-ui-react';
 import parse from 'html-react-parser';
-import hdapi from '../api/hdapi';
-
-const BASE_URL = 'http://humanidadesdigitales.pe';
+import { hdapi, downloadUrl } from '../api/hdapi';
 
 const Tools = ({ uniqueId, disabled, corpusSize }) => {
   const [intervalIdState, setIntervalIdState] = useState();
@@ -36,13 +34,14 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
   };
 
   const formatResults = (results) => {
-    var substr = term;
-    let htmlString = results.replaceAll(substr, '<b>' + substr + '</b>');
-    htmlString = htmlString.replaceAll('./', '<br><br>');
+    var substr = term.replaceAll('"', '');
+    var regexTerm = new RegExp(substr, 'gi');
+    let htmlString = results.replace(regexTerm, '<b>' + substr + '</b>');
     htmlString = htmlString.replace(
-      /(.+pdf)\:([0-9]+)\:/g,
-      '<span className="searchTitles"><b>$1 - pág. $2 - </b></span><br>',
+      /(\.\/[^/].+\.pdf):([0-9]+):(?! \.\/)/gi,
+      '<span className="searchTitles"><b>$1 - pág. $2</b></span><br>',
     );
+    htmlString = htmlString.replaceAll('./', '<br><br>');
     return htmlString;
   };
 
@@ -53,6 +52,9 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
       .then((response) => {
         if (response && response.data) {
           setSearchResults(formatResults(response.data));
+          setProcessingSearch(false);
+        } else if (response && response.data === '') {
+          setSearchResults('No se obtuvieron resultados');
           setProcessingSearch(false);
         }
       });
@@ -105,7 +107,7 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
         </Button>
         {!disabled && allProcessed && !processingOCR ? (
           <div>
-            <a href={`${BASE_URL}/files/download/${uniqueId}`}>
+            <a href={`${downloadUrl}/files/download/${uniqueId}`}>
               <Button primary className="clipboardBtn">
                 DESCARGAR PDFs CONVERTIDOS
               </Button>
