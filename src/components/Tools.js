@@ -33,10 +33,22 @@ const Tools = ({ uniqueId, disabled, corpusSize }) => {
     });
   };
 
+  const escapeHtml = (unsafe) => {
+    return unsafe
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  };
+
   const formatResults = (results) => {
     var substr = term.replaceAll('"', '');
     var regexTerm = new RegExp(substr, 'gi');
-    let htmlString = results.replace(regexTerm, '<b>' + substr + '</b>');
+    let htmlString = escapeHtml(results).replace(
+      regexTerm,
+      '<b>' + substr + '</b>',
+    );
     htmlString = htmlString.replace(
       /(\.\/[^/].+\.pdf):([0-9]+):(?! \.\/)/gi,
       '<span className="searchTitles"><b>$1 - pág. $2</b></span><br>',
